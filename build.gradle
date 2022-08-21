@@ -24,6 +24,9 @@ buildscript{
 
         //Retrofit with Moshi converter
         retrofitMoshiVersion = '2.9.0'
+
+        //Hilt Dependency Injection
+        hiltVersion = '2.42'
     }
 }
 
