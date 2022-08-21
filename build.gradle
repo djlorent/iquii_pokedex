@@ -18,6 +18,12 @@ buildscript{
 
         //Android Navigation
         navigationVersion = '2.5.1'
+
+        //Moshi
+        moshiVersion = '1.13.0'
+
+        //Retrofit with Moshi converter
+        retrofitMoshiVersion = '2.9.0'
     }
 }
 
