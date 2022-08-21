@@ -27,6 +27,9 @@ buildscript{
 
         //Hilt Dependency Injection
         hiltVersion = '2.42'
+
+        //Coroutines
+        coroutinesVersion = '1.6.1'
     }
 }
 
