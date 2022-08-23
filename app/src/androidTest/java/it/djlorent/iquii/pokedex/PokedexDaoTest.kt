@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import it.djlorent.iquii.pokedex.data.sources.local.PokeDatabase
-import it.djlorent.iquii.pokedex.data.sources.local.dao.PokedexDao
-import it.djlorent.iquii.pokedex.data.sources.local.entities.Pokemon
+import it.djlorent.iquii.pokedex.data.sources.local.database.PokeDatabase
+import it.djlorent.iquii.pokedex.data.sources.local.database.dao.PokedexDao
+import it.djlorent.iquii.pokedex.data.sources.local.database.entities.Pokemon
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.*

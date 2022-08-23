@@ -1,4 +1,4 @@
-package it.djlorent.iquii.pokedex.data.sources.local.entities
+package it.djlorent.iquii.pokedex.data.sources.local.database.entities
 
 import androidx.room.Entity
 import androidx.room.ForeignKey

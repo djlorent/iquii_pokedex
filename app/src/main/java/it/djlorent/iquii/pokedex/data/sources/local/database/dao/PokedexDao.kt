@@ -1,9 +1,8 @@
-package it.djlorent.iquii.pokedex.data.sources.local.dao
+package it.djlorent.iquii.pokedex.data.sources.local.database.dao
 
 import androidx.room.Dao
 import androidx.room.Query
-import it.djlorent.iquii.pokedex.data.sources.local.entities.Favorite
-import it.djlorent.iquii.pokedex.data.sources.local.entities.Pokemon
+import it.djlorent.iquii.pokedex.data.sources.local.database.entities.Pokemon
 
 @Dao
 interface PokedexDao: BaseDao<Pokemon> {

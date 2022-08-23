@@ -1,11 +1,11 @@
-package it.djlorent.iquii.pokedex.data.sources.local
+package it.djlorent.iquii.pokedex.data.sources.local.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import it.djlorent.iquii.pokedex.data.sources.local.dao.FavoritesDao
-import it.djlorent.iquii.pokedex.data.sources.local.dao.PokedexDao
-import it.djlorent.iquii.pokedex.data.sources.local.entities.Favorite
-import it.djlorent.iquii.pokedex.data.sources.local.entities.Pokemon
+import it.djlorent.iquii.pokedex.data.sources.local.database.dao.FavoritesDao
+import it.djlorent.iquii.pokedex.data.sources.local.database.dao.PokedexDao
+import it.djlorent.iquii.pokedex.data.sources.local.database.entities.Favorite
+import it.djlorent.iquii.pokedex.data.sources.local.database.entities.Pokemon
 
 @Database(
     entities = [

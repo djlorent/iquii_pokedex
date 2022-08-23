@@ -1,9 +1,9 @@
-package it.djlorent.iquii.pokedex.data.sources.local.dao
+package it.djlorent.iquii.pokedex.data.sources.local.database.dao
 
 import androidx.room.Dao
 import androidx.room.Query
-import it.djlorent.iquii.pokedex.data.sources.local.entities.Favorite
-import it.djlorent.iquii.pokedex.data.sources.local.entities.Pokemon
+import it.djlorent.iquii.pokedex.data.sources.local.database.entities.Favorite
+import it.djlorent.iquii.pokedex.data.sources.local.database.entities.Pokemon
 
 @Dao
 interface FavoritesDao: BaseDao<Favorite> {
@@ -25,9 +25,9 @@ interface FavoritesDao: BaseDao<Favorite> {
     suspend fun getById(id: Int): Pokemon?
 
     @Query("DELETE FROM favorites")
-    suspend fun deleteAll()
+    suspend fun deleteAll(): Int
 
     @Query("DELETE FROM favorites where pokemonId == :id")
-    suspend fun deleteById(id: Int)
+    suspend fun deleteById(id: Int): Int
 }
 
