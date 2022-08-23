@@ -2,8 +2,7 @@ package it.djlorent.iquii.pokedex
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import it.djlorent.iquii.pokedex.data.sources.network.PokeApi
-import it.djlorent.iquii.pokedex.data.sources.network.PokemonService
+import it.djlorent.iquii.pokedex.data.sources.network.api.PokemonService
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.BeforeClass
@@ -13,21 +12,24 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class PokemonServiceTest {
-    lateinit var service: PokemonService
 
-    @BeforeClass
-    fun setup() {
-        val moshi = Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
-            .build()
+    companion object {
+        lateinit var service: PokemonService
 
-        val retrofit = Retrofit.Builder()
-            .baseUrl(PokeApi.baseUri)
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .build()
+        @BeforeClass
+        @JvmStatic
+        fun setup() {
+            val moshi = Moshi.Builder()
+                .add(KotlinJsonAdapterFactory())
+                .build()
 
-        val pokeApi = PokeApi(retrofit.create(PokemonService::class.java))
-        service = pokeApi.pokemonService
+            val retrofit = Retrofit.Builder()
+                .baseUrl(Constants.BASE_URI)
+                .addConverterFactory(MoshiConverterFactory.create(moshi))
+                .build()
+
+            service = retrofit.create(PokemonService::class.java)
+        }
     }
 
     @Test

@@ -1,7 +1,7 @@
-package it.djlorent.iquii.pokedex.data.sources.network
+package it.djlorent.iquii.pokedex.data.sources.network.api
 
-import it.djlorent.iquii.pokedex.data.sources.network.model.PokemonResponse
-import it.djlorent.iquii.pokedex.data.sources.network.model.PokemonsResponse
+import it.djlorent.iquii.pokedex.data.sources.network.api.model.PokemonDetailsResponse
+import it.djlorent.iquii.pokedex.data.sources.network.api.model.PokemonsResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -18,5 +18,5 @@ interface PokemonService {
     @GET("pokemon/{idOrName}")
     suspend fun fetchPokemon(
         @Path("idOrName") idOrName: String
-    ): Response<PokemonResponse>
+    ): Response<PokemonDetailsResponse>
 }
