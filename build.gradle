@@ -28,6 +28,9 @@ buildscript{
         //Hilt Dependency Injection
         hiltVersion = '2.42'
 
+        //Room DB
+        roomVersion = '2.4.3'
+
         //Coroutines
         coroutinesVersion = '1.6.1'
     }
