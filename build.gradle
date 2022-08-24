@@ -39,6 +39,9 @@ buildscript{
 
         //Mockito
         mockitoVersion = '4.7.0'
+
+        //Turbine
+        turbineVersion = '0.9.0'
     }
 }
 
