@@ -7,7 +7,7 @@ interface LocalDataSource {
     suspend fun getPokedex(page: Int? = null, pageSize: Int? = null): List<Pokemon>
     suspend fun addToPokedex(pokemons: List<Pokemon>): Boolean
 
-    suspend fun getFavorites(page: Int?, pageSize: Int?): List<Pokemon>
+    suspend fun getFavorites(page: Int? = null, pageSize: Int? = null): List<Pokemon>
     suspend fun addFavorite(pokemonId: Int): Boolean
     suspend fun removeFavorite(pokemonId: Int): Boolean
 

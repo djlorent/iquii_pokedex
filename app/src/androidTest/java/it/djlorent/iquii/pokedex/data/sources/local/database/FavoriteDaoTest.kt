@@ -1,11 +1,10 @@
-package it.djlorent.iquii.pokedex
+package it.djlorent.iquii.pokedex.data.sources.local.database
 
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import it.djlorent.iquii.pokedex.data.sources.local.database.PokeDatabase
 import it.djlorent.iquii.pokedex.data.sources.local.database.dao.FavoritesDao
 import it.djlorent.iquii.pokedex.data.sources.local.database.entities.Favorite
 import it.djlorent.iquii.pokedex.data.sources.local.database.entities.Pokemon

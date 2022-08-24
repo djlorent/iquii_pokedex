@@ -9,7 +9,8 @@ import it.djlorent.iquii.pokedex.data.sources.local.database.entities.Pokemon as
 object PokemonMapper {
 
     fun fromNetwork(netPokemon: PokemonResponse): Pokemon {
-        val id = netPokemon.url.split('/').last().toInt()
+        val id = netPokemon.url
+            .split('/').dropLast(1).last().toInt()
 
         return Pokemon(
             id = id,

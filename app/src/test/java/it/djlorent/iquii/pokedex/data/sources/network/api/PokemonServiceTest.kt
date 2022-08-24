@@ -1,8 +1,8 @@
-package it.djlorent.iquii.pokedex
+package it.djlorent.iquii.pokedex.data.sources.network.api
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import it.djlorent.iquii.pokedex.data.sources.network.api.PokemonService
+import it.djlorent.iquii.pokedex.Constants
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.BeforeClass
