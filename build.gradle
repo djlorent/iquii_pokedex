@@ -42,6 +42,9 @@ buildscript{
 
         //Turbine
         turbineVersion = '0.9.0'
+
+        //Glide
+        glideVersion = '4.13.1'
     }
 
     dependencies {
