@@ -2,4 +2,6 @@
     <string name="app_name">IQUII Pokedex</string>
     <string name="title_pokedex">Pokedex</string>
     <string name="title_favorites">Favorites</string>
+    <string name="pokemonimage">pokemonImage</string>
+    <string name="pokemonId">#%1$04d</string>
 </resources>
