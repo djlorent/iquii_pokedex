@@ -24,6 +24,8 @@ import org.mockito.junit.MockitoJUnitRunner
 @RunWith(MockitoJUnitRunner::class)
 class PokemonRepositoryTest {
 
+    private lateinit var repository: PokemonRepository
+
     @Mock
     private lateinit var networkSrc: NetworkDataSource
 
@@ -33,7 +35,6 @@ class PokemonRepositoryTest {
     @Mock
     private lateinit var ioDispatcher: CoroutineDispatcher
 
-    private lateinit var repository: PokemonRepository
 
     @Before
     fun setup() = runBlocking {
@@ -44,39 +45,57 @@ class PokemonRepositoryTest {
 
     @Test
     fun gettingPokedex_FromLocal() = runTest {
-        flowPaging(repository::getPokedex) { page, pageSize ->
-            val expected = MockUtils.pokedexMock().subList(pageSize * (page - 1), pageSize * page)
+        val pageSize = 5
+        val page = 2
 
-            Mockito
-                .`when`(localSrc.getPokedex(page, pageSize))
-                .thenReturn(expected)
-        }
+        val expected = MockUtils.pokedexMock().subList(pageSize * (page - 1), pageSize * page)
+        println("Page: $page | PageSize: $pageSize | Indexs: ${expected.map { it.id }}")
+
+        Mockito
+            .`when`(localSrc.getPokedex(page, pageSize))
+            .thenReturn(expected)
+
+        val items = repository.getPokedex(page, pageSize)
+        items.forEach(::println)
+        Assert.assertEquals(expected, items)
     }
 
     @Test
     fun gettingPokedex_FromNetwork() = runTest {
-        flowPaging(repository::getPokedex) { page, pageSize ->
-            val expected = MockUtils.pokedexMock().subList(pageSize * (page - 1), pageSize * page)
+        val pageSize = 5
+        val page = 4
 
-            Mockito
-                .`when`(localSrc.getPokedex(page, pageSize))
-                .thenReturn(listOf())
+        val expected = MockUtils.pokedexMock().subList(pageSize * (page - 1), pageSize * page)
+        println("Page: $page | PageSize: $pageSize | Indexs: ${expected.map { it.id }}")
 
-            Mockito
-                .`when`(networkSrc.fetchPokemons(pageSize, (page-1) * pageSize))
-                .thenReturn(expected)
-        }
+        Mockito
+            .`when`(localSrc.getPokedex(page, pageSize))
+            .thenReturn(listOf())
+
+        Mockito
+            .`when`(networkSrc.fetchPokemons(pageSize, (page-1) * pageSize))
+            .thenReturn(expected)
+
+        val items = repository.getPokedex(page, pageSize)
+        items.forEach(::println)
+        Assert.assertEquals(expected, items)
     }
 
     @Test
-    fun gettingFavorites() = runTest {
-        flowPaging(repository::getFavorites) { page, pageSize ->
-            val expected = MockUtils.pokedexMock().subList(pageSize * (page - 1), pageSize * page)
+    fun gettingFavorites_ThirdPage() = runTest {
+        val pageSize = 5
+        val page = 3
 
-            Mockito
-                .`when`(localSrc.getFavorites(page, pageSize))
-                .thenReturn(expected)
-        }
+        val expected = MockUtils.pokedexMock().subList(pageSize * (page - 1), pageSize * page)
+        println("Page: $page | PageSize: $pageSize | Indexs: ${expected.map { it.id }}")
+
+        Mockito
+            .`when`(localSrc.getFavorites(page, pageSize))
+            .thenReturn(expected)
+
+        val items = repository.getFavorites(page, pageSize)
+        items.forEach(::println)
+        Assert.assertEquals(expected, items)
     }
 
     @Test

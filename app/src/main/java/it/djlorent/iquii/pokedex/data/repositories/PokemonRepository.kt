@@ -6,9 +6,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface PokemonRepository {
 
-    fun getPokedex(page: Int, pageSize: Int): Flow<List<Pokemon>>
+    suspend fun getPokedex(page: Int, pageSize: Int): List<Pokemon>
 
-    fun getFavorites(page: Int, pageSize: Int): Flow<List<Pokemon>>
+    suspend fun getFavorites(page: Int, pageSize: Int): List<Pokemon>
 
     suspend fun getPokemonInfo(id: Int): Pokemon?
 
