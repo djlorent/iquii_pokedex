@@ -100,7 +100,7 @@ class PokedexDaoTest {
             Pokemon(6, "charizard"),
         ))
 
-        val pokedex = pokedexDao.getAll(0, 2)
+        val pokedex = pokedexDao.getAll(1, 2)
         pokedex.forEach(::println)
 
         assert(pokedex.count() == 2)
@@ -121,7 +121,7 @@ class PokedexDaoTest {
             Pokemon(6, "charizard"),
         ))
 
-        val pokedex = pokedexDao.getAll(1, 2)
+        val pokedex = pokedexDao.getAll(2, 2)
         pokedex.forEach(::println)
 
         assert(pokedex.count() == 2)

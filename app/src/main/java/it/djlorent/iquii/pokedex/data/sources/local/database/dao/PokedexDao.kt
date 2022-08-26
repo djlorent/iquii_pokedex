@@ -10,7 +10,7 @@ interface PokedexDao: BaseDao<Pokemon> {
     @Query("SELECT * FROM pokedex ORDER BY id ASC")
     suspend fun getAll(): List<Pokemon>
 
-    @Query("SELECT * FROM pokedex ORDER BY id ASC LIMIT :pageSize OFFSET :page * :pageSize")
+    @Query("SELECT * FROM pokedex ORDER BY id ASC LIMIT :pageSize OFFSET (:page - 1) * :pageSize")
     suspend fun getAll(page: Int, pageSize: Int): List<Pokemon>
 
     @Query("SELECT * FROM pokedex WHERE id == :id")
