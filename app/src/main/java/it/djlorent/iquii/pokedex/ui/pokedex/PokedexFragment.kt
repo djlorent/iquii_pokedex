@@ -3,8 +3,6 @@ package it.djlorent.iquii.pokedex.ui.pokedex
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
@@ -14,16 +12,19 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
+import it.djlorent.iquii.pokedex.R
 import it.djlorent.iquii.pokedex.databinding.FragmentPokedexBinding
 import it.djlorent.iquii.pokedex.ui.adapters.Pagination
-import it.djlorent.iquii.pokedex.ui.adapters.PokemonRecyclerViewAdapter
+import it.djlorent.iquii.pokedex.ui.adapters.PokemonLinearAdapter
+import it.djlorent.iquii.pokedex.ui.models.FavoriteManagerResult
+import it.djlorent.iquii.pokedex.ui.models.PokemonState
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class PokedexFragment : Fragment() {
+open class PokedexFragment : Fragment() {
 
     private lateinit var binding: FragmentPokedexBinding
-    private lateinit var pokemonAdapter: PokemonRecyclerViewAdapter
+    private lateinit var pokemonAdapter: PokemonLinearAdapter
     private val pokedexViewModel: PokedexViewModel by viewModels()
 
     override fun onCreateView(
@@ -41,12 +42,32 @@ class PokedexFragment : Fragment() {
     }
 
     private fun initRecyclerView(){
-        pokemonAdapter = PokemonRecyclerViewAdapter(
-            itemClickListener = { item ->
-                Toast.makeText(requireContext(), "${item.name} clicked!", Toast.LENGTH_SHORT).show()
+        pokemonAdapter = PokemonLinearAdapter(
+            itemClickListener = { model ->
+                (model as PokemonState).let {
+                    Toast.makeText(requireContext(), "${it.pokemon.name} clicked!", Toast.LENGTH_SHORT).show()
+                }
             },
-            itemLongClickListener = { item ->
-                Toast.makeText(requireContext(), "${item.name} LONG clicked!", Toast.LENGTH_SHORT).show()
+            itemLongClickListener = { model ->
+                (model as PokemonState).let {
+                    lifecycleScope.launch {
+                        val result = pokedexViewModel.addOrRemoveToFavorite(it)
+
+                        val printText = when(result){
+                            FavoriteManagerResult.Added -> {
+                                it.updateFavorite(true)
+                                requireContext().resources.getString(R.string.addedToFavorite, it.pokemon.name)
+                            }
+                            FavoriteManagerResult.Removed -> {
+                                it.updateFavorite(false)
+                                requireContext().resources.getString(R.string.removedToFavorite, it.pokemon.name)
+                            }
+                            else -> requireContext().resources.getString(R.string.error)
+                        }
+
+                        Toast.makeText(requireContext(), printText, Toast.LENGTH_SHORT).show()
+                    }
+                }
             },
             imageLoadCompleteListener = { }
         )

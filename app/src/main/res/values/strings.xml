@@ -4,4 +4,8 @@
     <string name="title_favorites">Favorites</string>
     <string name="pokemonimage">pokemonImage</string>
     <string name="pokemonId">#%1$04d</string>
+
+    <string name="addedToFavorite">%s added to favorite successfully!</string>
+    <string name="removedToFavorite">%s removed to favorite successfully!</string>
+    <string name="error">Something went wrong!</string>
 </resources>

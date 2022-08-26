@@ -10,6 +10,10 @@ interface PokemonRepository {
 
     suspend fun getFavorites(page: Int, pageSize: Int): List<Pokemon>
 
+    fun getAllFavoriteIds(): Flow<List<Int>>
+
+    fun getAllFavorites(): Flow<List<Pokemon>>
+
     suspend fun getPokemonInfo(id: Int): Pokemon?
 
     suspend fun addFavoritePokemon(id: Int): Boolean

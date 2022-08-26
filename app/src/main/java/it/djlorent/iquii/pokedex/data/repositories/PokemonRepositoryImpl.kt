@@ -4,6 +4,8 @@ import it.djlorent.iquii.pokedex.data.sources.local.LocalDataSource
 import it.djlorent.iquii.pokedex.data.sources.network.NetworkDataSource
 import it.djlorent.iquii.pokedex.models.Pokemon
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -27,6 +29,10 @@ class PokemonRepositoryImpl @Inject constructor(
     override suspend fun getFavorites(page: Int, pageSize: Int): List<Pokemon> = withContext(ioDispatcher) {
         return@withContext localSrc.getFavorites(page, pageSize)
     }
+
+    override fun getAllFavoriteIds(): Flow<List<Int>> = localSrc.getAllFavoriteIds().flowOn(ioDispatcher)
+
+    override fun getAllFavorites(): Flow<List<Pokemon>> = localSrc.getAllFavorites().flowOn(ioDispatcher)
 
     override suspend fun getPokemonInfo(id: Int): Pokemon? = withContext(ioDispatcher) {
         var pokemonInfo = localSrc.getPokemonDetails(id)

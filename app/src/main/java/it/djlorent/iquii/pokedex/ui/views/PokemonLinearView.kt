@@ -3,23 +3,21 @@ package it.djlorent.iquii.pokedex.ui.views
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.widget.FrameLayout
 import android.widget.ImageView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
+import androidx.databinding.Observable
+import it.djlorent.iquii.pokedex.R
 import it.djlorent.iquii.pokedex.databinding.ViewLinearPokemonBinding
-import it.djlorent.iquii.pokedex.extensions.*
-import it.djlorent.iquii.pokedex.models.Pokemon
+import it.djlorent.iquii.pokedex.extensions.onClick
+import it.djlorent.iquii.pokedex.extensions.onLongClick
+import it.djlorent.iquii.pokedex.ui.models.PokemonState
 
-class PokemonLinearView : FrameLayout {
-
-    private var binding: ViewLinearPokemonBinding
-    private var imageView: ImageView
+open class PokemonLinearView : PokemonView<ViewLinearPokemonBinding, PokemonState> {
+    private val pokeballView: ImageView
 
     init {
         binding = ViewLinearPokemonBinding.inflate(LayoutInflater.from(context),this,true)
-        imageView = binding.pokemonImageView
+        imagePokemonView = binding.pokemonImageView
+        pokeballView = binding.pokeballView
 
         with(binding.root) {
             onClick { itemClickListener?.invoke(binding.pokemonModel!!) }
@@ -27,44 +25,40 @@ class PokemonLinearView : FrameLayout {
         }
     }
 
-    var itemClickListener: ((Pokemon) -> Unit)? = null
-    var itemLongClickListener: ((Pokemon) -> Unit)? = null
-    var imageLoadCompleteListener: ((Pokemon) -> Unit)? = null
-
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
-    fun bind(pokemon: Pokemon) {
+    override fun bind(model: PokemonState) {
         layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
         clear()
-        setModel(pokemon)
-        loadImage(pokemon.image)
+        setModel(model)
+        loadImage(model.pokemon.image)
     }
 
-    private fun setModel(model: Pokemon){
+    fun setModel(model: PokemonState){
         binding.pokemonModel = model
+        setFavoriteIcon(model)
+        binding.pokemonModel?.addOnPropertyChangedCallback(propertyChangedCallback)
     }
 
-    private fun clear() {
+    override fun clear() {
+        binding.pokemonModel?.removeOnPropertyChangedCallback(propertyChangedCallback)
         binding.pokemonModel = null
-        loadImage(null)
+        super.clear()
     }
 
-    private fun loadImage(url: String?) {
-        val glide = Glide.with(this)
+    override fun onImageLoadSuccess() = imageLoadCompleteListener?.invoke(binding.pokemonModel!!)
 
-        if(url != null)
-            glide.load(url)
-                .transition(withCrossFade(200))
-                .diskCacheStrategy(DiskCacheStrategy.DATA)
-                .withSuccessListener { onImageLoadSuccess() }
-                .into(imageView)
-        else {
-            glide
-                .clear(imageView)
+    private val propertyChangedCallback = object : Observable.OnPropertyChangedCallback() {
+        override fun onPropertyChanged(observable: Observable, i: Int) {
+            setFavoriteIcon(observable as PokemonState)
         }
     }
 
-    private fun onImageLoadSuccess() = imageLoadCompleteListener?.invoke(binding.pokemonModel!!)
+    private fun setFavoriteIcon(model: PokemonState){
+        pokeballView.setImageResource(
+            if(model.isFavorite) R.drawable.ic_pokeball_red else R.drawable.ic_pokeball
+        )
+    }
 }

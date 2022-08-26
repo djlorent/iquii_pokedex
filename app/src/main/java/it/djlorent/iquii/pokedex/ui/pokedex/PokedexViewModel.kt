@@ -1,12 +1,16 @@
 package it.djlorent.iquii.pokedex.ui.pokedex
 
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import it.djlorent.iquii.pokedex.data.repositories.PokemonRepository
 import it.djlorent.iquii.pokedex.models.Pokemon
+import it.djlorent.iquii.pokedex.ui.models.FavoriteManagerResult
+import it.djlorent.iquii.pokedex.ui.models.PokemonState
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,11 +24,19 @@ class PokedexViewModel @Inject constructor(
     private val _pokedexUiStateFlow = MutableStateFlow(PokedexUiState(true, false))
     val pokedexUiStateFlow = _pokedexUiStateFlow.asStateFlow()
 
+    val favoritesFlow = repository.getAllFavoriteIds()
+
     @OptIn(FlowPreview::class)
-    val pokeStateFlow: Flow<List<Pokemon>> =
+    val pokeStateFlow: Flow<List<PokemonState>> =
         _pageFlow
             .map { page ->
                 getPagingPokedex(page)
+                    .map{ pokedexPage ->
+                        pokedexPage.map {
+                            PokemonState(it, favoritesFlow.first().contains(it.id))
+                        }
+                    }
+                    .catch { println(it.message) }
                     .onEmpty { _pokedexUiStateFlow.value = PokedexUiState(false, true) }
                     .onCompletion { _pokedexUiStateFlow.update { it.copy(isLoading = false) } }
             }
@@ -41,6 +53,18 @@ class PokedexViewModel @Inject constructor(
             emit(pokedexPage)
     }
 
+    suspend fun addOrRemoveToFavorite(pokemonState: PokemonState): FavoriteManagerResult {
+        return viewModelScope.async {
+            if(pokemonState.isFavorite){
+                val result = repository.removeFavoritePokemon(pokemonState.pokemon.id)
+                return@async if(result) FavoriteManagerResult.Removed else FavoriteManagerResult.RemoveError
+            }else{
+                val result = repository.addFavoritePokemon(pokemonState.pokemon.id)
+                return@async if(result) FavoriteManagerResult.Added else FavoriteManagerResult.AddError
+            }
+        }.await()
+    }
+
     fun requestNewPage() {
         _pokedexUiStateFlow.update { it.copy(isLoading = true) }
         _pageFlow.value = ++currentPage
@@ -50,9 +74,4 @@ class PokedexViewModel @Inject constructor(
         _pageFlow.value = 1
     }
 }
-
-data class PokedexUiState(
-    var isLoading: Boolean = false,
-    var isComplete: Boolean = false
-)
 

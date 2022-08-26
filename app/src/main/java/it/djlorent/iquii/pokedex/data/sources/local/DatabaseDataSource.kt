@@ -4,6 +4,8 @@ import it.djlorent.iquii.pokedex.data.sources.local.database.PokeDatabase
 import it.djlorent.iquii.pokedex.data.sources.local.database.entities.Favorite
 import it.djlorent.iquii.pokedex.mappers.PokemonMapper
 import it.djlorent.iquii.pokedex.models.Pokemon
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class DatabaseDataSource @Inject constructor(
@@ -26,18 +28,21 @@ class DatabaseDataSource @Inject constructor(
         return added.count() == pokemons.size
     }
 
-    override suspend fun getFavorites(page: Int?, pageSize: Int?): List<Pokemon> {
-        val localFavorites = if (page == null || pageSize == null)
-            pokeDatabase.favoritesDao().getAll()
-        else
-            pokeDatabase.favoritesDao().getAll(page, pageSize)
+    override fun getAllFavoriteIds(): Flow<List<Int>> = pokeDatabase.favoritesDao().getAllIds()
+    override fun getAllFavorites(): Flow<List<Pokemon>> =
+        pokeDatabase.favoritesDao().getAll().map {
+            it.map {
+                PokemonMapper.fromLocal(it)
+            }
+        }
 
+    override suspend fun getFavorites(page: Int, pageSize: Int): List<Pokemon> {
+        val localFavorites = pokeDatabase.favoritesDao().getAll(page, pageSize)
         return localFavorites.map { PokemonMapper.fromLocal(it) }
     }
 
     override suspend fun getPokemonDetails(id: Int): Pokemon? {
         val localPokemon = pokeDatabase.pokedexDao().getById(id)
-
         return localPokemon?.let { PokemonMapper.fromLocal(it) }
     }
 
