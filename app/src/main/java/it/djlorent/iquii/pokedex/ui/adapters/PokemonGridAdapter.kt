@@ -6,13 +6,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import it.djlorent.iquii.pokedex.models.Pokemon
-import it.djlorent.iquii.pokedex.ui.views.PokemonLinearView
+import it.djlorent.iquii.pokedex.ui.views.PokemonGridView
 
-class PokemonRecyclerViewAdapter(
-    private val itemClickListener: (Pokemon) -> Unit,
-    private val itemLongClickListener: (Pokemon) -> Unit,
-    private val imageLoadCompleteListener: (Pokemon) -> Unit,
-): ListAdapter<Pokemon, PokemonRecyclerViewAdapter.ViewHolder>(DiffCallback) {
+
+class PokemonGridAdapter(
+    private val itemClickListener: (Any) -> Unit,
+    private val itemLongClickListener: (Any) -> Unit,
+    private val imageLoadCompleteListener: (Any) -> Unit,
+): ListAdapter<Pokemon, PokemonGridAdapter.ViewHolder>(DiffCallback) {
 
     init {
         this.stateRestorationPolicy = StateRestorationPolicy.PREVENT_WHEN_EMPTY
@@ -20,10 +21,10 @@ class PokemonRecyclerViewAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            PokemonLinearView(parent.context).apply {
-                itemClickListener = this@PokemonRecyclerViewAdapter.itemClickListener
-                itemLongClickListener = this@PokemonRecyclerViewAdapter.itemLongClickListener
-                imageLoadCompleteListener = this@PokemonRecyclerViewAdapter.imageLoadCompleteListener
+            PokemonGridView(parent.context).apply {
+                itemClickListener = this@PokemonGridAdapter.itemClickListener
+                itemLongClickListener = this@PokemonGridAdapter.itemLongClickListener
+                imageLoadCompleteListener = this@PokemonGridAdapter.imageLoadCompleteListener
             }
         )
     }
@@ -31,25 +32,20 @@ class PokemonRecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         item?.let {
-            (holder.itemView as PokemonLinearView).bind(it)
+            (holder.itemView as PokemonGridView).bind(it)
         }
     }
-
-    fun appendItems(newList: List<Pokemon>){
-        val mergedList = currentList.plus(newList)
-        submitList(mergedList)
-    }
-
+    
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     companion object DiffCallback : DiffUtil.ItemCallback<Pokemon>() {
 
         override fun areItemsTheSame(oldItem: Pokemon, newItem: Pokemon): Boolean {
-            return oldItem === newItem
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(oldItem: Pokemon, newItem: Pokemon): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.id == newItem.id && oldItem.name == newItem.name
         }
     }
 }
