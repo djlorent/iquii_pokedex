@@ -10,9 +10,9 @@ import it.djlorent.iquii.pokedex.ui.views.PokemonGridView
 
 
 class PokemonGridAdapter(
-    private val itemClickListener: (View, Any) -> Unit,
-    private val itemLongClickListener: (Any) -> Unit,
-    private val imageLoadCompleteListener: (Any) -> Unit,
+    private val itemClickListener: ((View, Any) -> Unit)? = null,
+    private val itemLongClickListener: ((Any) -> Unit)? = null,
+    private val imageLoadCompleteListener: ((Any) -> Unit)? = null,
 ): ListAdapter<Pokemon, PokemonGridAdapter.ViewHolder>(DiffCallback) {
 
     init {

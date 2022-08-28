@@ -68,7 +68,7 @@ class PokedexFragment : Fragment() {
 
                 }
             },
-            itemLongClickListener = { model ->
+            pokeballClickListener = { model ->
                 (model as PokemonState).let {
                     lifecycleScope.launch {
                         val result = pokedexViewModel.addOrRemoveToFavorite(it)

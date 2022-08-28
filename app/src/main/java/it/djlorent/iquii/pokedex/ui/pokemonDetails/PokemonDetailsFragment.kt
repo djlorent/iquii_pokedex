@@ -46,6 +46,7 @@ class PokemonDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         postponeEnterTransition()
+
         binding = FragmentPokemonDetailsBinding.inflate(inflater, container, false)
 
         pokemonDetailsViewModel.pokemonDetails.observe(viewLifecycleOwner) {
@@ -62,7 +63,6 @@ class PokemonDetailsFragment : Fragment() {
     private fun loadImage(url: String){
         Glide.with(this)
             .load(url)
-            .transition(DrawableTransitionOptions.withCrossFade(200))
             .diskCacheStrategy(DiskCacheStrategy.DATA)
             .withSuccessListener { startPostponedEnterTransition() }
             .into(binding.image)

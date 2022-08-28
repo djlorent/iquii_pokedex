@@ -9,9 +9,10 @@ import it.djlorent.iquii.pokedex.ui.models.PokemonState
 import it.djlorent.iquii.pokedex.ui.views.PokemonLinearView
 
 class PokemonLinearAdapter(
-    private val itemClickListener: (View, Any) -> Unit,
-    private val itemLongClickListener: (Any) -> Unit,
-    private val imageLoadCompleteListener: (Any) -> Unit,
+    private val itemClickListener: ((View, Any) -> Unit)? = null,
+    private val itemLongClickListener: ((Any) -> Unit)? = null,
+    private val pokeballClickListener: ((Any) -> Unit)? = null,
+    private val imageLoadCompleteListener: ((Any) -> Unit)? = null,
 ): ListAdapter<PokemonState, PokemonLinearAdapter.ViewHolder>(DiffCallback) {
 
     init {
@@ -23,6 +24,7 @@ class PokemonLinearAdapter(
             PokemonLinearView(parent.context).apply {
                 itemClickListener = this@PokemonLinearAdapter.itemClickListener
                 itemLongClickListener = this@PokemonLinearAdapter.itemLongClickListener
+                pokeballClickListener = this@PokemonLinearAdapter.pokeballClickListener
                 imageLoadCompleteListener = this@PokemonLinearAdapter.imageLoadCompleteListener
             }
         )
