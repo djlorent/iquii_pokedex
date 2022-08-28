@@ -39,11 +39,6 @@ class PokemonLinearAdapter(
         }
     }
 
-    fun appendItems(newList: List<PokemonState>){
-        val mergedList = currentList.plus(newList)
-        submitList(mergedList)
-    }
-
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     companion object DiffCallback : DiffUtil.ItemCallback<PokemonState>() {

@@ -8,19 +8,16 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.FragmentNavigator
-import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import it.djlorent.iquii.pokedex.R
 import it.djlorent.iquii.pokedex.databinding.FragmentPokedexBinding
 import it.djlorent.iquii.pokedex.delegates.Pagination
+import it.djlorent.iquii.pokedex.extensions.navigateToWithSharedView
+import it.djlorent.iquii.pokedex.extensions.subscribeOnStarted
 import it.djlorent.iquii.pokedex.ui.adapters.PokemonLinearAdapter
 import it.djlorent.iquii.pokedex.ui.models.FavoriteManagerResult
 import it.djlorent.iquii.pokedex.ui.models.PokemonState
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -54,18 +51,10 @@ class PokedexFragment : Fragment() {
             itemClickListener = { view, model ->
                 (model as PokemonState).let {
                     selectedPokemonId = it.pokemon.id
-
-                    try {
-                        findNavController().navigate(
-                            PokedexFragmentDirections.actionNavigationPokedexToPokemonDetailsFragment(it.pokemon.id),
-                            FragmentNavigator.Extras.Builder()
-                                .addSharedElements(
-                                    mapOf(view to view.transitionName)
-                                ).build()
-                        )
-                    }catch (t: Throwable){
-                        println(t.message)
-                    }
+                    navigateToWithSharedView(
+                        PokedexFragmentDirections.actionNavigationPokedexToPokemonDetailsFragment(it.pokemon.id),
+                        view
+                    )
                 }
             },
             pokeballClickListener = { model ->
@@ -89,20 +78,8 @@ class PokedexFragment : Fragment() {
                     }
                 }
             },
-            imageLoadCompleteListener = { model ->
-                (model as PokemonState).let {
-                    if (it.pokemon.id == selectedPokemonId) {
-                        startPostponedEnterTransition()
-                    }
-                }
-            },
-            imageLoadFailListener = { model ->
-                (model as PokemonState).let {
-                    if (it.pokemon.id == selectedPokemonId) {
-                        startPostponedEnterTransition()
-                    }
-                }
-            }
+            imageLoadCompleteListener = ::imageLoadListener,
+            imageLoadFailListener = ::imageLoadListener
         )
         binding.pokedexView.adapter = pokemonAdapter
         binding.pokedexView.addOnScrollListener(
@@ -112,6 +89,14 @@ class PokedexFragment : Fragment() {
                 onFinish = { pokedexViewModel.pokedexUiStateFlow.value.isComplete }
             )
         )
+    }
+
+    private fun imageLoadListener(model: Any) {
+        (model as PokemonState).let {
+            if (it.pokemon.id == selectedPokemonId) {
+                startPostponedEnterTransition()
+            }
+        }
     }
 
     private fun addSubscriptions(){
@@ -124,14 +109,6 @@ class PokedexFragment : Fragment() {
 
         pokedexViewModel.pokeStateLive.observe(viewLifecycleOwner) {
             pokemonAdapter.submitList(it)
-        }
-    }
-
-    private fun subscribeOnStarted(subscriber : suspend () -> Unit){
-        viewLifecycleOwner.lifecycleScope.launch{
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED){
-                subscriber()
-            }
         }
     }
 }
