@@ -19,8 +19,12 @@ class PokemonRepositoryImpl @Inject constructor(
         var pokedex = localSrc.getPokedex(page, pageSize)
 
         if(pokedex.isEmpty()){
-            pokedex = networkSrc.fetchPokemons(pageSize, (page-1) * pageSize)
-            localSrc.addToPokedex(pokedex)
+            try {
+                pokedex = networkSrc.fetchPokemons(pageSize, (page-1) * pageSize)
+                localSrc.addToPokedex(pokedex)
+            }catch (t: Throwable){
+                println(t.message)
+            }
         }
 
         return@withContext pokedex

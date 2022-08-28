@@ -49,11 +49,11 @@ class PokemonLinearAdapter(
     companion object DiffCallback : DiffUtil.ItemCallback<PokemonState>() {
 
         override fun areItemsTheSame(oldItem: PokemonState, newItem: PokemonState): Boolean {
-            return oldItem === newItem
+            return oldItem.pokemon.id == newItem.pokemon.id
         }
 
         override fun areContentsTheSame(oldItem: PokemonState, newItem: PokemonState): Boolean {
-            return oldItem.pokemon.id == newItem.pokemon.id
+            return oldItem.pokemon.id == newItem.pokemon.id && oldItem.pokemon.name == newItem.pokemon.name
         }
     }
 }

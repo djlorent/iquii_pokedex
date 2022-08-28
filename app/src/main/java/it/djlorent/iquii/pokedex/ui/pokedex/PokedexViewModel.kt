@@ -1,17 +1,16 @@
 package it.djlorent.iquii.pokedex.ui.pokedex
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import it.djlorent.iquii.pokedex.Constants
 import it.djlorent.iquii.pokedex.data.repositories.PokemonRepository
-import it.djlorent.iquii.pokedex.models.Pokemon
 import it.djlorent.iquii.pokedex.ui.models.FavoriteManagerResult
 import it.djlorent.iquii.pokedex.ui.models.PokemonState
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.async
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,39 +18,34 @@ class PokedexViewModel @Inject constructor(
     private val repository: PokemonRepository
 ) : ViewModel() {
 
-    private var currentPage = 1
-    private val _pageFlow = MutableStateFlow(currentPage)
+    private var _currentPage = 0
+    private val _pageStateFlow = MutableStateFlow(1)
+    private val _pokeList = mutableListOf<PokemonState>()
 
     private val _pokedexUiStateFlow = MutableStateFlow(PokedexUiState(true, false))
     val pokedexUiStateFlow = _pokedexUiStateFlow.asStateFlow()
 
-    val favoritesFlow = repository.getAllFavoriteIds()
+    val pokeStateLive: LiveData<List<PokemonState>> = _pageStateFlow
+        .map { page -> getPagingPokedex(page) }
+        .catch { println(it.message) }
+        .asLiveData()
 
-    @OptIn(FlowPreview::class)
-    val pokeStateFlow: Flow<List<PokemonState>> =
-        _pageFlow
-            .map { page ->
-                getPagingPokedex(page)
-                    .map{ pokedexPage ->
-                        pokedexPage.map {
-                            PokemonState(it, favoritesFlow.first().contains(it.id))
-                        }
-                    }
-                    .catch { println(it.message) }
-                    .onEmpty { _pokedexUiStateFlow.value = PokedexUiState(false, true) }
-                    .onCompletion { _pokedexUiStateFlow.update { it.copy(isLoading = false) } }
+    private suspend fun getPagingPokedex(page: Int): List<PokemonState> {
+        if(page > _currentPage){
+            val newPageData =  repository.getPokedex(page, Constants.PAGE_SIZE).map {
+                PokemonState(it, repository.getAllFavoriteIds().first().contains(it.id))
             }
-            .flattenConcat()
 
-    private fun getPagingPokedex(page: Int): Flow<List<Pokemon>> = flow {
-        val pokedexPage = if(page < currentPage){
-            repository.getPokedex(page, Constants.PAGE_SIZE * currentPage)
-        } else {
-            repository.getPokedex(page, Constants.PAGE_SIZE)
+            if(newPageData.isEmpty()){
+                _pokedexUiStateFlow.value = PokedexUiState(false, true)
+            }
+            else {
+                _currentPage++
+                _pokeList.addAll(newPageData)
+                _pokedexUiStateFlow.update { it.copy(isLoading = false) }
+            }
         }
-
-        if(pokedexPage.isNotEmpty())
-            emit(pokedexPage)
+        return _pokeList.toList()
     }
 
     suspend fun addOrRemoveToFavorite(pokemonState: PokemonState): FavoriteManagerResult {
@@ -68,11 +62,7 @@ class PokedexViewModel @Inject constructor(
 
     fun requestNewPage() {
         _pokedexUiStateFlow.update { it.copy(isLoading = true) }
-        _pageFlow.value = ++currentPage
-    }
-
-    fun resetPage() {
-        _pageFlow.value = 1
+        _pageStateFlow.value++
     }
 }
 

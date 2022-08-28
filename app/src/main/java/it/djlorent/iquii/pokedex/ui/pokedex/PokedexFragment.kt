@@ -20,6 +20,7 @@ import it.djlorent.iquii.pokedex.delegates.Pagination
 import it.djlorent.iquii.pokedex.ui.adapters.PokemonLinearAdapter
 import it.djlorent.iquii.pokedex.ui.models.FavoriteManagerResult
 import it.djlorent.iquii.pokedex.ui.models.PokemonState
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -65,7 +66,6 @@ class PokedexFragment : Fragment() {
                     }catch (t: Throwable){
                         println(t.message)
                     }
-
                 }
             },
             pokeballClickListener = { model ->
@@ -122,10 +122,8 @@ class PokedexFragment : Fragment() {
             }
         }
 
-        subscribeOnStarted {
-            pokedexViewModel.pokeStateFlow.collect {
-                pokemonAdapter.appendItems(it)
-            }
+        pokedexViewModel.pokeStateLive.observe(viewLifecycleOwner) {
+            pokemonAdapter.submitList(it)
         }
     }
 
@@ -135,10 +133,5 @@ class PokedexFragment : Fragment() {
                 subscriber()
             }
         }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        pokedexViewModel.resetPage()
     }
 }
