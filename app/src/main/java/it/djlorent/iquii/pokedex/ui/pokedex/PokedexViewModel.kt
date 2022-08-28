@@ -21,6 +21,7 @@ class PokedexViewModel @Inject constructor(
     private var _currentPage = 0
     private val _pageStateFlow = MutableStateFlow(1)
     private val _pokeList = mutableListOf<PokemonState>()
+    val favoritesFlow = repository.getAllFavoriteIds()
 
     private val _pokedexUiStateFlow = MutableStateFlow(PokedexUiState(true, false))
     val pokedexUiStateFlow = _pokedexUiStateFlow.asStateFlow()
@@ -33,7 +34,7 @@ class PokedexViewModel @Inject constructor(
     private suspend fun getPagingPokedex(page: Int): List<PokemonState> {
         if(page > _currentPage){
             val newPageData =  repository.getPokedex(page, Constants.PAGE_SIZE).map {
-                PokemonState(it, repository.getAllFavoriteIds().first().contains(it.id))
+                PokemonState(it, favoritesFlow.first().contains(it.id))
             }
 
             if(newPageData.isEmpty()){

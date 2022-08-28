@@ -18,6 +18,8 @@ import it.djlorent.iquii.pokedex.extensions.subscribeOnStarted
 import it.djlorent.iquii.pokedex.ui.adapters.PokemonLinearAdapter
 import it.djlorent.iquii.pokedex.ui.models.FavoriteManagerResult
 import it.djlorent.iquii.pokedex.ui.models.PokemonState
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -104,6 +106,14 @@ class PokedexFragment : Fragment() {
             pokedexViewModel.pokedexUiStateFlow.collect {
                 binding.loadingSpinner.isVisible = it.isLoading && pokemonAdapter.itemCount == 0
                 binding.loadingSpinnerAppend.isVisible = it.isLoading && pokemonAdapter.itemCount > 0
+            }
+        }
+
+        subscribeOnStarted {
+            pokedexViewModel.favoritesFlow.collectLatest { favorites ->
+                pokemonAdapter.currentList.forEach {
+                    it.updateFavorite(favorites.contains(it.pokemon.id))
+                }
             }
         }
 

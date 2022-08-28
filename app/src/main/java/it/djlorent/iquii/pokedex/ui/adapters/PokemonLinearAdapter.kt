@@ -48,7 +48,9 @@ class PokemonLinearAdapter(
         }
 
         override fun areContentsTheSame(oldItem: PokemonState, newItem: PokemonState): Boolean {
-            return oldItem.pokemon.id == newItem.pokemon.id && oldItem.pokemon.name == newItem.pokemon.name
+            return oldItem.pokemon.id == newItem.pokemon.id
+                    && oldItem.pokemon.name == newItem.pokemon.name
+                    && oldItem.isFavorite == oldItem.isFavorite
         }
     }
 }
