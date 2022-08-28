@@ -14,4 +14,5 @@
     <string name="special_attack">Sp. Attack</string>
     <string name="special_defense">Sp. Defense</string>
     <string name="speed">Speed</string>
+    <string name="no_favorites">There\'s no favorites...</string>
 </resources>

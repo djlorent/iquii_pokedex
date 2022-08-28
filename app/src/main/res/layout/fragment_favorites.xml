@@ -8,6 +8,15 @@
     android:orientation="vertical"
     tools:context=".ui.favorites.FavoritesFragment">
 
+    <TextView
+        android:id="@+id/noFavoritesText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/no_favorites"
+        android:textSize="20sp"
+        />
+
     <ProgressBar
         android:id="@+id/loading_spinner"
         android:layout_width="wrap_content"

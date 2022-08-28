@@ -98,12 +98,14 @@ class FavoritesFragment : Fragment() {
         subscribeOnStarted {
             favoritesViewModel.favoritesUiStateFlow.collect {
                 binding.loadingSpinner.isVisible = it.isLoading && pokemonAdapter.itemCount == 0
+                binding.noFavoritesText.isVisible = !it.isLoading && pokemonAdapter.itemCount == 0
             }
         }
 
         subscribeOnStarted {
             favoritesViewModel.favoritesFlow.collect {
                 pokemonAdapter.submitList(it)
+                binding.noFavoritesText.isVisible = it.isEmpty()
             }
         }
     }
