@@ -38,8 +38,13 @@ class PokemonRepositoryImpl @Inject constructor(
         var pokemon = localSrc.getPokemonDetails(id)
 
         if(pokemon.stats == null || pokemon.types == null){
-            pokemon = networkSrc.fetchPokemon(id.toString()) ?: pokemon
-            pokemon.let{ localSrc.insertPokemonDetails(it) }
+            try {
+                pokemon = networkSrc.fetchPokemon(id.toString()) ?: pokemon
+                pokemon.let{ localSrc.insertPokemonDetails(it) }
+            }
+            catch (t: Throwable){
+                println(t.message)
+            }
         }
 
         return@withContext pokemon

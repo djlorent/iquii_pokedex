@@ -95,6 +95,13 @@ class PokedexFragment : Fragment() {
                         startPostponedEnterTransition()
                     }
                 }
+            },
+            imageLoadFailListener = { model ->
+                (model as PokemonState).let {
+                    if (it.pokemon.id == selectedPokemonId) {
+                        startPostponedEnterTransition()
+                    }
+                }
             }
         )
         binding.pokedexView.adapter = pokemonAdapter

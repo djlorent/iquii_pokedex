@@ -10,6 +10,7 @@ import androidx.databinding.ViewDataBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import it.djlorent.iquii.pokedex.extensions.withFailListener
 import it.djlorent.iquii.pokedex.extensions.withSuccessListener
 import it.djlorent.iquii.pokedex.ui.models.PokemonState
 
@@ -20,6 +21,7 @@ abstract class PokemonView<T: ViewDataBinding, M> : FrameLayout {
     var itemClickListener: ((View, M) -> Unit)? = null
     var itemLongClickListener: ((M) -> Unit)? = null
     var imageLoadCompleteListener: ((M) -> Unit)? = null
+    var imageLoadFailListener: ((M) -> Unit)? = null
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
@@ -40,6 +42,7 @@ abstract class PokemonView<T: ViewDataBinding, M> : FrameLayout {
                 .transition(DrawableTransitionOptions.withCrossFade(200))
                 .diskCacheStrategy(DiskCacheStrategy.DATA)
                 .withSuccessListener { onImageLoadSuccess() }
+                .withFailListener { onImageLoadFail()  }
                 .into(imagePokemonView)
         else {
             glide
@@ -48,4 +51,5 @@ abstract class PokemonView<T: ViewDataBinding, M> : FrameLayout {
     }
 
     abstract fun onImageLoadSuccess(): Unit?
+    abstract fun onImageLoadFail(): Unit?
 }

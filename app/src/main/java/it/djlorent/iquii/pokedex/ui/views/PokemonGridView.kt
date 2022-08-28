@@ -49,4 +49,5 @@ class PokemonGridView : PokemonView<ViewGridPokemonBinding, Pokemon> {
     }
 
     override fun onImageLoadSuccess() = imageLoadCompleteListener?.invoke(binding.pokemonModel!!)
+    override fun onImageLoadFail() = imageLoadFailListener?.invoke(binding.pokemonModel!!)
 }

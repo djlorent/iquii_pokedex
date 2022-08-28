@@ -13,6 +13,7 @@ class PokemonGridAdapter(
     private val itemClickListener: ((View, Any) -> Unit)? = null,
     private val itemLongClickListener: ((Any) -> Unit)? = null,
     private val imageLoadCompleteListener: ((Any) -> Unit)? = null,
+    private val imageLoadFailListener: ((Any) -> Unit)? = null,
 ): ListAdapter<Pokemon, PokemonGridAdapter.ViewHolder>(DiffCallback) {
 
     init {
@@ -25,6 +26,7 @@ class PokemonGridAdapter(
                 itemClickListener = this@PokemonGridAdapter.itemClickListener
                 itemLongClickListener = this@PokemonGridAdapter.itemLongClickListener
                 imageLoadCompleteListener = this@PokemonGridAdapter.imageLoadCompleteListener
+                imageLoadFailListener = this@PokemonGridAdapter.imageLoadFailListener
             }
         )
     }

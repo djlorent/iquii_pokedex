@@ -13,6 +13,7 @@ class PokemonLinearAdapter(
     private val itemLongClickListener: ((Any) -> Unit)? = null,
     private val pokeballClickListener: ((Any) -> Unit)? = null,
     private val imageLoadCompleteListener: ((Any) -> Unit)? = null,
+    private val imageLoadFailListener: ((Any) -> Unit)? = null,
 ): ListAdapter<PokemonState, PokemonLinearAdapter.ViewHolder>(DiffCallback) {
 
     init {
@@ -26,6 +27,7 @@ class PokemonLinearAdapter(
                 itemLongClickListener = this@PokemonLinearAdapter.itemLongClickListener
                 pokeballClickListener = this@PokemonLinearAdapter.pokeballClickListener
                 imageLoadCompleteListener = this@PokemonLinearAdapter.imageLoadCompleteListener
+                imageLoadFailListener = this@PokemonLinearAdapter.imageLoadFailListener
             }
         )
     }

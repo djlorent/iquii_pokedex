@@ -53,6 +53,7 @@ open class PokemonLinearView : PokemonView<ViewLinearPokemonBinding, PokemonStat
     }
 
     override fun onImageLoadSuccess() = imageLoadCompleteListener?.invoke(binding.pokemonModel!!)
+    override fun onImageLoadFail() = imageLoadFailListener?.invoke(binding.pokemonModel!!)
 
     private val propertyChangedCallback = object : Observable.OnPropertyChangedCallback() {
         override fun onPropertyChanged(observable: Observable, i: Int) {

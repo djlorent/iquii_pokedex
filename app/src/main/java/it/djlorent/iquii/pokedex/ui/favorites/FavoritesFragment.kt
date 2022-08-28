@@ -89,7 +89,14 @@ class FavoritesFragment : Fragment() {
                         startPostponedEnterTransition()
                     }
                 }
-            }
+            },
+            imageLoadFailListener = {model ->
+                (model as Pokemon).let {
+                    if (it.id == selectedPokemonId) {
+                        startPostponedEnterTransition()
+                    }
+                }
+            },
         )
         binding.favoritesView.adapter = pokemonAdapter
    }

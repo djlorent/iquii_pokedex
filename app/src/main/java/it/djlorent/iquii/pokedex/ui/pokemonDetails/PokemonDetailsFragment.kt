@@ -22,6 +22,7 @@ import com.google.android.material.chip.Chip
 import dagger.hilt.android.AndroidEntryPoint
 import it.djlorent.iquii.pokedex.R
 import it.djlorent.iquii.pokedex.databinding.FragmentPokemonDetailsBinding
+import it.djlorent.iquii.pokedex.extensions.withFailListener
 import it.djlorent.iquii.pokedex.extensions.withSuccessListener
 import it.djlorent.iquii.pokedex.models.PokemonType
 import kotlinx.coroutines.launch
@@ -65,6 +66,7 @@ class PokemonDetailsFragment : Fragment() {
             .load(url)
             .diskCacheStrategy(DiskCacheStrategy.DATA)
             .withSuccessListener { startPostponedEnterTransition() }
+            .withFailListener { startPostponedEnterTransition() }
             .into(binding.image)
     }
 
