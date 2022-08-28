@@ -23,7 +23,7 @@ class PokemonGridView : PokemonView<ViewGridPokemonBinding, Pokemon> {
         imagePokemonView = binding.pokemonImageView
 
         with(binding.root) {
-            onClick { itemClickListener?.invoke(binding.pokemonModel!!) }
+            onClick { itemClickListener?.invoke(binding.pokemonImageView, binding.pokemonModel!!) }
             onLongClick { itemLongClickListener?.invoke(binding.pokemonModel!!) }
         }
     }

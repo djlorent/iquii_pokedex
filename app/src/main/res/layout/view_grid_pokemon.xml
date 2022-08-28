@@ -28,6 +28,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:contentDescription="@string/pokemonimage"
+                android:transitionName="@{pokemonModel.name}"
                 app:layout_constraintBottom_toTopOf="@+id/nameText"
                 app:layout_constraintDimensionRatio="1"
                 app:layout_constraintEnd_toEndOf="parent"

@@ -11,6 +11,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavDirections
+import androidx.navigation.fragment.FragmentNavigator
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import it.djlorent.iquii.pokedex.R
 import it.djlorent.iquii.pokedex.databinding.FragmentPokedexBinding
@@ -21,17 +24,22 @@ import it.djlorent.iquii.pokedex.ui.models.PokemonState
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-open class PokedexFragment : Fragment() {
+class PokedexFragment : Fragment() {
 
     private lateinit var binding: FragmentPokedexBinding
     private lateinit var pokemonAdapter: PokemonLinearAdapter
     private val pokedexViewModel: PokedexViewModel by viewModels()
+    private var selectedPokemonId: Int? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        if (selectedPokemonId != null) {
+            postponeEnterTransition()
+        }
+
         binding = FragmentPokedexBinding.inflate(inflater, container, false)
 
         initRecyclerView()
@@ -43,9 +51,22 @@ open class PokedexFragment : Fragment() {
 
     private fun initRecyclerView(){
         pokemonAdapter = PokemonLinearAdapter(
-            itemClickListener = { model ->
+            itemClickListener = { view, model ->
                 (model as PokemonState).let {
-                    Toast.makeText(requireContext(), "${it.pokemon.name} clicked!", Toast.LENGTH_SHORT).show()
+                    selectedPokemonId = it.pokemon.id
+
+                    try {
+                        findNavController().navigate(
+                            PokedexFragmentDirections.actionNavigationPokedexToPokemonDetailsFragment(it.pokemon.id),
+                            FragmentNavigator.Extras.Builder()
+                                .addSharedElements(
+                                    mapOf(view to view.transitionName)
+                                ).build()
+                        )
+                    }catch (t: Throwable){
+                        println(t.message)
+                    }
+
                 }
             },
             itemLongClickListener = { model ->
@@ -69,7 +90,13 @@ open class PokedexFragment : Fragment() {
                     }
                 }
             },
-            imageLoadCompleteListener = { }
+            imageLoadCompleteListener = { model ->
+                (model as PokemonState).let {
+                    if (it.pokemon.id == selectedPokemonId) {
+                        startPostponedEnterTransition()
+                    }
+                }
+            }
         )
         binding.pokedexView.adapter = pokemonAdapter
         binding.pokedexView.addOnScrollListener(

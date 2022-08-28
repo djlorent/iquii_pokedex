@@ -26,6 +26,7 @@
                 android:layout_width="@dimen/cardHeight"
                 android:layout_height="0dp"
                 android:contentDescription="@string/pokemonimage"
+                android:transitionName="@{pokemonModel.pokemon.name}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

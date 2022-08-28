@@ -2,6 +2,7 @@ package it.djlorent.iquii.pokedex.ui.views
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.annotation.CallSuper
@@ -16,7 +17,7 @@ abstract class PokemonView<T: ViewDataBinding, M> : FrameLayout {
     lateinit var binding: T
     lateinit var imagePokemonView: ImageView
 
-    var itemClickListener: ((M) -> Unit)? = null
+    var itemClickListener: ((View, M) -> Unit)? = null
     var itemLongClickListener: ((M) -> Unit)? = null
     var imageLoadCompleteListener: ((M) -> Unit)? = null
 

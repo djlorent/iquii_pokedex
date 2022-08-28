@@ -9,7 +9,7 @@ import it.djlorent.iquii.pokedex.ui.models.PokemonState
 import it.djlorent.iquii.pokedex.ui.views.PokemonLinearView
 
 class PokemonLinearAdapter(
-    private val itemClickListener: (Any) -> Unit,
+    private val itemClickListener: (View, Any) -> Unit,
     private val itemLongClickListener: (Any) -> Unit,
     private val imageLoadCompleteListener: (Any) -> Unit,
 ): ListAdapter<PokemonState, PokemonLinearAdapter.ViewHolder>(DiffCallback) {

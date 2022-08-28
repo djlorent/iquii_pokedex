@@ -20,7 +20,7 @@ open class PokemonLinearView : PokemonView<ViewLinearPokemonBinding, PokemonStat
         pokeballView = binding.pokeballView
 
         with(binding.root) {
-            onClick { itemClickListener?.invoke(binding.pokemonModel!!) }
+            onClick { itemClickListener?.invoke(binding.pokemonImageView, binding.pokemonModel!!) }
             onLongClick { itemLongClickListener?.invoke(binding.pokemonModel!!) }
         }
     }

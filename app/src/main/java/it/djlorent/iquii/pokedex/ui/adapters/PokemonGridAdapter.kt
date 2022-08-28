@@ -10,7 +10,7 @@ import it.djlorent.iquii.pokedex.ui.views.PokemonGridView
 
 
 class PokemonGridAdapter(
-    private val itemClickListener: (Any) -> Unit,
+    private val itemClickListener: (View, Any) -> Unit,
     private val itemLongClickListener: (Any) -> Unit,
     private val imageLoadCompleteListener: (Any) -> Unit,
 ): ListAdapter<Pokemon, PokemonGridAdapter.ViewHolder>(DiffCallback) {
@@ -35,7 +35,7 @@ class PokemonGridAdapter(
             (holder.itemView as PokemonGridView).bind(it)
         }
     }
-    
+
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     companion object DiffCallback : DiffUtil.ItemCallback<Pokemon>() {

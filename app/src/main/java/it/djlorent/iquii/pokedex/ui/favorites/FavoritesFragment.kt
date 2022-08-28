@@ -11,14 +11,15 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.FragmentNavigator
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import it.djlorent.iquii.pokedex.R
 import it.djlorent.iquii.pokedex.databinding.FragmentFavoritesBinding
 import it.djlorent.iquii.pokedex.models.Pokemon
-import it.djlorent.iquii.pokedex.ui.adapters.Pagination
 import it.djlorent.iquii.pokedex.ui.adapters.PokemonGridAdapter
-import it.djlorent.iquii.pokedex.ui.adapters.PokemonLinearAdapter
 import it.djlorent.iquii.pokedex.ui.models.FavoriteManagerResult
+import it.djlorent.iquii.pokedex.ui.models.PokemonState
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -27,12 +28,17 @@ class FavoritesFragment : Fragment() {
     private lateinit var binding: FragmentFavoritesBinding
     private lateinit var pokemonAdapter: PokemonGridAdapter
     private val favoritesViewModel: FavoritesViewModel by viewModels()
+    private var selectedPokemonId: Int? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        if (selectedPokemonId != null) {
+            postponeEnterTransition()
+        }
+
         binding = FragmentFavoritesBinding.inflate(inflater, container, false)
 
         initRecyclerView()
@@ -44,9 +50,21 @@ class FavoritesFragment : Fragment() {
 
     private fun initRecyclerView(){
         pokemonAdapter = PokemonGridAdapter(
-            itemClickListener = { model ->
+            itemClickListener = { view, model ->
                 (model as Pokemon).let {
-                    Toast.makeText(requireContext(), "${it.name} clicked!", Toast.LENGTH_SHORT).show()
+                    selectedPokemonId = it.id
+
+                    try {
+                        findNavController().navigate(
+                            FavoritesFragmentDirections.actionNavigationFavoritesToPokemonDetailsFragment(it.id),
+                            FragmentNavigator.Extras.Builder()
+                                .addSharedElements(
+                                    mapOf(view to view.transitionName)
+                                ).build()
+                        )
+                    }catch (t: Throwable){
+                        println(t.message)
+                    }
                 }
             },
             itemLongClickListener = { model ->
@@ -65,7 +83,13 @@ class FavoritesFragment : Fragment() {
                     }
                 }
             },
-            imageLoadCompleteListener = { }
+            imageLoadCompleteListener = {model ->
+                (model as Pokemon).let {
+                    if (it.id == selectedPokemonId) {
+                        startPostponedEnterTransition()
+                    }
+                }
+            }
         )
         binding.favoritesView.adapter = pokemonAdapter
    }
