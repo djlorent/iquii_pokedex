@@ -29,6 +29,7 @@ class DatabaseDataSource @Inject constructor(
     }
 
     override fun getAllFavoriteIds(): Flow<List<Int>> = pokeDatabase.favoritesDao().getAllIds()
+
     override fun getAllFavorites(): Flow<List<Pokemon>> =
         pokeDatabase.favoritesDao().getAll().map {
             it.map {
@@ -41,15 +42,17 @@ class DatabaseDataSource @Inject constructor(
         return localFavorites.map { PokemonMapper.fromLocal(it) }
     }
 
-    override suspend fun getPokemonDetails(id: Int): Pokemon? {
-        val localPokemon = pokeDatabase.pokedexDao().getById(id)
-        return localPokemon?.let { PokemonMapper.fromLocal(it) }
+    override suspend fun getPokemonDetails(id: Int): Pokemon {
+        val localPokemonDetails = pokeDatabase.pokedexDao().getPokemonWithDetails(id)
+        return localPokemonDetails.let { PokemonMapper.fromLocalDetails(it) }
     }
 
-    override suspend fun updatePokemonDetails(pokemon: Pokemon): Boolean {
-        val localPokemon = PokemonMapper.toLocal(pokemon)
-        val updated = pokeDatabase.pokedexDao().update(localPokemon)
-        return updated == 1
+    override suspend fun insertPokemonDetails(pokemon: Pokemon): Boolean {
+        val localPokemonDetails = PokemonMapper.toLocalDetails(pokemon)
+
+        val updatedTypes = pokeDatabase.pokemonTypesDao().insert(localPokemonDetails.types)
+        val updatedStats = pokeDatabase.pokemonStatsDao().insert(localPokemonDetails.stats!!)
+        return updatedTypes.isNotEmpty() && updatedStats > 0
     }
 
     override suspend fun addFavorite(pokemonId: Int): Boolean {

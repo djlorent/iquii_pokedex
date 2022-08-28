@@ -1,9 +1,7 @@
 package it.djlorent.iquii.pokedex.data.sources.network
 
 import it.djlorent.iquii.pokedex.data.sources.network.api.PokemonService
-import it.djlorent.iquii.pokedex.data.sources.network.api.model.PokemonDetailsResponse
-import it.djlorent.iquii.pokedex.data.sources.network.api.model.PokemonResponse
-import it.djlorent.iquii.pokedex.data.sources.network.api.model.PokemonsResponse
+import it.djlorent.iquii.pokedex.data.sources.network.api.model.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
@@ -30,83 +28,83 @@ class PokeApiDataSourceTest {
         next = "https://pokeapi.co/api/v2/pokemon/?offset=20&limit=20",
         previous = null,
         results = listOf(
-            PokemonResponse(
+            PokemonBaseResponse(
                 name = "bulbasaur",
                 url = "https://pokeapi.co/api/v2/pokemon/1/"
             ),
-            PokemonResponse(
+            PokemonBaseResponse(
                 name = "ivysaur",
                 url = "https://pokeapi.co/api/v2/pokemon/2/"
             ),
-            PokemonResponse(
+            PokemonBaseResponse(
                 name = "venusaur",
                 url = "https://pokeapi.co/api/v2/pokemon/3/"
             ),
-            PokemonResponse(
+            PokemonBaseResponse(
                 name = "charmander",
                 url = "https://pokeapi.co/api/v2/pokemon/4/"
             ),
-            PokemonResponse(
+            PokemonBaseResponse(
                 name = "charmeleon",
                 url = "https://pokeapi.co/api/v2/pokemon/5/"
             ),
-            PokemonResponse(
+            PokemonBaseResponse(
                 name = "charizard",
                 url = "https://pokeapi.co/api/v2/pokemon/6/"
             ),
-            PokemonResponse(
+            PokemonBaseResponse(
                 name = "squirtle",
                 url = "https://pokeapi.co/api/v2/pokemon/7/"
             ),
-            PokemonResponse(
+            PokemonBaseResponse(
                 name = "wartortle",
                 url = "https://pokeapi.co/api/v2/pokemon/8/"
             ),
-            PokemonResponse(
+            PokemonBaseResponse(
                 name = "blastoise",
                 url = "https://pokeapi.co/api/v2/pokemon/9/"
             ),
-            PokemonResponse(
+            PokemonBaseResponse(
                 name = "caterpie",
                 url = "https://pokeapi.co/api/v2/pokemon/10/"
             ),
-            PokemonResponse(
+            PokemonBaseResponse(
                 name = "metapod",
                 url = "https://pokeapi.co/api/v2/pokemon/11/"
             ),
-            PokemonResponse(
+            PokemonBaseResponse(
                 name = "butterfree",
                 url = "https://pokeapi.co/api/v2/pokemon/12/"
             ),
-            PokemonResponse(
+            PokemonBaseResponse(
                 name = "weedle",
                 url = "https://pokeapi.co/api/v2/pokemon/13/"
             ),
-            PokemonResponse(
+            PokemonBaseResponse(
                 name = "kakuna",
                 url = "https://pokeapi.co/api/v2/pokemon/14/"
             ),
-            PokemonResponse(
+            PokemonBaseResponse(
                 name = "beedrill",
                 url = "https://pokeapi.co/api/v2/pokemon/15/"
             ),
-            PokemonResponse(
+            PokemonBaseResponse(
                 name = "pidgey",
                 url = "https://pokeapi.co/api/v2/pokemon/16/"
             ),
-            PokemonResponse(
+            PokemonBaseResponse(
                 name = "pidgeotto",
                 url = "https://pokeapi.co/api/v2/pokemon/17/"
             ),
-            PokemonResponse(
+            PokemonBaseResponse(
                 name = "pidgeot",
                 url = "https://pokeapi.co/api/v2/pokemon/18/"
             ),
-            PokemonResponse(
+            PokemonBaseResponse(
                 name = "rattata",
                 url = "https://pokeapi.co/api/v2/pokemon/19/"
             ),
-            PokemonResponse(
+            PokemonBaseResponse(
                 name = "raticate",
                 url = "https://pokeapi.co/api/v2/pokemon/20/"
             ),
@@ -120,7 +118,51 @@ class PokeApiDataSourceTest {
         results = listOf()
     )
 
-    private val pokemonDetailsMock = PokemonDetailsResponse(1, "bulbasaur")
+    private val pokemonDetailsMock =
+        PokemonDetailsResponse(1, "bulbasaur",
+        stats = listOf(
+            PokemonBaseStat(
+                baseStat =  45,
+                effort = 0,
+                stat = ModelBase("hp", "https://pokeapi.co/api/v2/stat/1/")
+            ),
+            PokemonBaseStat(
+                baseStat = 49,
+                effort = 0,
+                stat = ModelBase("attack", "https://pokeapi.co/api/v2/stat/2/")
+            ),
+            PokemonBaseStat(
+                baseStat = 49,
+                effort = 0,
+                stat = ModelBase("defense", "https://pokeapi.co/api/v2/stat/3/")
+            ),
+            PokemonBaseStat(
+                baseStat = 65,
+                effort = 1,
+                stat = ModelBase("special-attack", "https://pokeapi.co/api/v2/stat/4/")
+            ),
+            PokemonBaseStat(
+                baseStat = 65,
+                effort = 0,
+                stat = ModelBase("special-defense", "https://pokeapi.co/api/v2/stat/5/")
+            ),
+            PokemonBaseStat(
+                baseStat = 45,
+                effort = 0,
+                stat = ModelBase("speed", "https://pokeapi.co/api/v2/stat/6/")
+            )
+        ),
+        types = listOf(
+            PokemonBaseType(
+                slot = 1,
+                type = ModelBase("grass", "https://pokeapi.co/api/v2/type/12/")
+            ),
+            PokemonBaseType(
+                slot = 2,
+                type = ModelBase("poison","https://pokeapi.co/api/v2/type/4/")
+            )
+        )
+    )
 
     @Before
     fun setup() = runBlocking {
@@ -164,6 +206,10 @@ class PokeApiDataSourceTest {
         assert(result!!.id == 1)
         assert(result.name == "bulbasaur")
         assert(result.image == "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png")
+        assert(result.stats != null)
+        assert(result.types != null)
+        assert(result.types!!.isNotEmpty())
+        assert(result.stats!!.hp > 0)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

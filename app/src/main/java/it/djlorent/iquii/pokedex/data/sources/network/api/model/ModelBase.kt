@@ -1,6 +1,6 @@
 package it.djlorent.iquii.pokedex.data.sources.network.api.model
 
-data class PokemonResponse(
+data class ModelBase (
     val name: String,
-    val url: String,
+    val url: String
 )

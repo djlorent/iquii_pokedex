@@ -8,5 +8,5 @@ data class PokemonsResponse(
     @Json(name = "count") val totalCount: Int,
     val next: String? = null,
     val previous: String? = null,
-    val results: List<PokemonResponse>
+    val results: List<PokemonBaseResponse>
 )

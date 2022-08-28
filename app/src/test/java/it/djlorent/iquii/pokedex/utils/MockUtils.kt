@@ -1,6 +1,12 @@
 package it.djlorent.iquii.pokedex.utils
 
+
+import it.djlorent.iquii.pokedex.data.sources.local.database.entities.PokemonType
+import it.djlorent.iquii.pokedex.data.sources.local.database.entities.Pokemon as LocalPokemon
+import it.djlorent.iquii.pokedex.data.sources.local.database.entities.PokemonDetails as LocalPokemonDetails
+import it.djlorent.iquii.pokedex.data.sources.local.database.entities.PokemonStats as LocalPokemonStats
 import it.djlorent.iquii.pokedex.models.Pokemon
+import it.djlorent.iquii.pokedex.models.PokemonStats
 
 object MockUtils {
     fun pokedexMock() = listOf(
@@ -107,85 +113,105 @@ object MockUtils {
     )
 
     fun pokedexDbMock() = listOf(
-        it.djlorent.iquii.pokedex.data.sources.local.database.entities.Pokemon(
+        LocalPokemon(
             name = "bulbasaur",
             id = 1
         ),
-        it.djlorent.iquii.pokedex.data.sources.local.database.entities.Pokemon(
+        LocalPokemon(
             name = "ivysaur",
             id = 2
         ),
-        it.djlorent.iquii.pokedex.data.sources.local.database.entities.Pokemon(
+        LocalPokemon(
             name = "venusaur",
             id = 3
         ),
-        it.djlorent.iquii.pokedex.data.sources.local.database.entities.Pokemon(
+        LocalPokemon(
             name = "charmander",
             id = 4
         ),
-        it.djlorent.iquii.pokedex.data.sources.local.database.entities.Pokemon(
+        LocalPokemon(
             name = "charmeleon",
             id = 5
         ),
-        it.djlorent.iquii.pokedex.data.sources.local.database.entities.Pokemon(
+        LocalPokemon(
             name = "charizard",
             id = 6
         ),
-        it.djlorent.iquii.pokedex.data.sources.local.database.entities.Pokemon(
+        LocalPokemon(
             name = "squirtle",
             id = 7
         ),
-        it.djlorent.iquii.pokedex.data.sources.local.database.entities.Pokemon(
+        LocalPokemon(
             name = "wartortle",
             id = 8
         ),
-        it.djlorent.iquii.pokedex.data.sources.local.database.entities.Pokemon(
+        LocalPokemon(
             name = "blastoise",
             id = 9
         ),
-        it.djlorent.iquii.pokedex.data.sources.local.database.entities.Pokemon(
+        LocalPokemon(
             name = "caterpie",
             id = 10
         ),
-        it.djlorent.iquii.pokedex.data.sources.local.database.entities.Pokemon(
+        LocalPokemon(
             name = "metapod",
             id = 11
         ),
-        it.djlorent.iquii.pokedex.data.sources.local.database.entities.Pokemon(
+        LocalPokemon(
             name = "butterfree",
             id = 12
         ),
-        it.djlorent.iquii.pokedex.data.sources.local.database.entities.Pokemon(
+        LocalPokemon(
             name = "weedle",
             id = 13
         ),
-        it.djlorent.iquii.pokedex.data.sources.local.database.entities.Pokemon(
+        LocalPokemon(
             name = "kakuna",
             id = 14
         ),
-        it.djlorent.iquii.pokedex.data.sources.local.database.entities.Pokemon(
+        LocalPokemon(
             name = "beedrill",
             id = 15
         ),
-        it.djlorent.iquii.pokedex.data.sources.local.database.entities.Pokemon(
+        LocalPokemon(
             name = "pidgey",
             id = 16
         ),
-        it.djlorent.iquii.pokedex.data.sources.local.database.entities.Pokemon(
+        LocalPokemon(
             name = "pidgeotto",
             id = 17
         ),
-        it.djlorent.iquii.pokedex.data.sources.local.database.entities.Pokemon(
+        LocalPokemon(
             name = "pidgeot",
             id = 18
         ),
-        it.djlorent.iquii.pokedex.data.sources.local.database.entities.Pokemon(
+        LocalPokemon(
             name = "rattata",
             id = 19
         ),
-        it.djlorent.iquii.pokedex.data.sources.local.database.entities.Pokemon(
+        LocalPokemon(
             name = "raticate",
             id = 20
         ),
     )
+
+    fun domainPokemon() = Pokemon(1,"bulbasaur")
+    fun dbPokemon() = LocalPokemon(1,"bulbasaur")
+
+    fun domainPokemonWithDetails() = Pokemon(
+        1,
+        "bulbasaur",
+         stats = PokemonStats(45,49,49,65,65, 45),
+         types = listOf("grass","poison")
+    )
+
+    fun dbPokemonWithDetails() = LocalPokemonDetails(
+        pokemon = LocalPokemon(1, "bulbasaur"),
+        stats = LocalPokemonStats(1,45,49,49,65,65, 45),
+        types = listOf(
+            PokemonType(1, "grass"),
+            PokemonType(1, "poison")
+        )
+    )
+
 }

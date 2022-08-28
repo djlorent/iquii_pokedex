@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteConstraintException
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import app.cash.turbine.test
 import it.djlorent.iquii.pokedex.data.sources.local.database.dao.FavoritesDao
 import it.djlorent.iquii.pokedex.data.sources.local.database.entities.Favorite
 import it.djlorent.iquii.pokedex.data.sources.local.database.entities.Pokemon
@@ -73,14 +74,14 @@ class FavoriteDaoTest {
         val favorite = Favorite(pokemonId = 1)
         favoritesDao.insert(favorite)
 
-        var favorites = favoritesDao.getAll()
-        favorites.forEach(::println)
-        assert(favorites.isNotEmpty())
-
         favoritesDao.deleteById(1)
 
-        favorites = favoritesDao.getAll()
-        assert(favorites.isEmpty())
+        val favorites = favoritesDao.getAllIds()
+        favorites.test {
+            val items = awaitItem()
+            assert(items.isEmpty())
+            awaitComplete()
+        }
     }
 
     @Test
@@ -91,10 +92,15 @@ class FavoriteDaoTest {
             Favorite(pokemonId = 5),
         ))
 
-        val favorites = favoritesDao.getAll()
-        favorites.forEach(::println)
-
-        assert(favorites.count() == 3)
+        val favorites = favoritesDao.getAllIds()
+        favorites.test {
+            val items = awaitItem()
+            items.forEach(::println)
+            assert(items.isNotEmpty())
+            assert(items.size == 3)
+            assert(items.first() == 2)
+            awaitComplete()
+        }
     }
 
     @Test
@@ -142,23 +148,6 @@ class FavoriteDaoTest {
     }
 
     @Test
-    fun deleteAllPokemon() = runTest {
-        favoritesDao.insert(listOf(
-            Favorite(pokemonId = 2),
-            Favorite(pokemonId = 3),
-            Favorite(pokemonId = 5),
-        ))
-
-        var pokedex = favoritesDao.getAll()
-        pokedex.forEach(::println)
-        assert(pokedex.isNotEmpty())
-
-        favoritesDao.deleteAll()
-        pokedex = favoritesDao.getAll()
-        assert(pokedex.isEmpty())
-    }
-
-    @Test
     fun deletePokemonById() = runTest {
         favoritesDao.insert(listOf(
             Favorite(pokemonId = 2),
@@ -166,12 +155,8 @@ class FavoriteDaoTest {
             Favorite(pokemonId = 5),
         ))
 
-        var favorites = favoritesDao.getAll()
-        assert(favorites.isNotEmpty())
+        val result = favoritesDao.deleteById(5)
 
-        favoritesDao.deleteById(5)
-
-        favorites = favoritesDao.getAll()
-        assert(favorites.count() == 2)
+        assert(result == 1)
     }
 }

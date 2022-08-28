@@ -9,12 +9,39 @@
         android:id="@+id/navigation_pokedex"
         android:name="it.djlorent.iquii.pokedex.ui.pokedex.PokedexFragment"
         android:label="@string/title_pokedex"
-        tools:layout="@layout/fragment_pokedex" />
+        tools:layout="@layout/fragment_pokedex" >
+        <action
+            android:id="@+id/action_navigation_pokedex_to_pokemonDetailsFragment"
+            app:destination="@id/pokemonDetailsFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/navigation_pokedex" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_favorites"
         android:name="it.djlorent.iquii.pokedex.ui.favorites.FavoritesFragment"
         android:label="@string/title_favorites"
-        tools:layout="@layout/fragment_favorites" />
+        tools:layout="@layout/fragment_favorites" >
+        <action
+            android:id="@+id/action_navigation_favorites_to_pokemonDetailsFragment"
+            app:destination="@id/pokemonDetailsFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/navigation_favorites" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/pokemonDetailsFragment"
+        android:name="it.djlorent.iquii.pokedex.ui.pokemonDetails.PokemonDetailsFragment"
+        tools:layout="@layout/fragment_pokemon_details">
+        <argument
+            android:name="pokemonId"
+            app:argType="integer" />
+    </fragment>
 
 </navigation>

@@ -52,10 +52,14 @@ buildscript{
 
         //RecyclerView
         recyclerViewVersion = '1.2.1'
+
+        //Navigation Safe Args
+        navigationSafeVersion = '2.5.1'
     }
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$androidCoreKtxVersion"
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navigationSafeVersion"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion"
     }
 }
@@ -64,6 +68,7 @@ plugins {
     id 'com.android.application' version '7.2.1' apply false
     id 'com.android.library' version '7.2.1' apply false
     id 'org.jetbrains.kotlin.android' version '1.7.0' apply false
+    id 'androidx.navigation.safeargs.kotlin' version "$navigationSafeVersion" apply false
 }
 
 task clean(type: Delete) {

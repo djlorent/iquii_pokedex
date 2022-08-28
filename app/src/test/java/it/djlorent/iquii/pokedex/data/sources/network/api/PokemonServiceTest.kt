@@ -69,6 +69,8 @@ class PokemonServiceTest {
         assert(response.body() != null)
         assert(response.body()!!.id == 9)
         assert(response.body()!!.name == "blastoise")
+        assert(response.body()!!.types.isNotEmpty())
+        assert(response.body()!!.stats.isNotEmpty())
 
         println(response.body()?.toString())
     }
@@ -80,6 +82,8 @@ class PokemonServiceTest {
         assert(response.body() != null)
         assert(response.body()!!.id == 9)
         assert(response.body()!!.name == "blastoise")
+        assert(response.body()!!.types.isNotEmpty())
+        assert(response.body()!!.stats.isNotEmpty())
 
         println(response.body()?.toString())
     }

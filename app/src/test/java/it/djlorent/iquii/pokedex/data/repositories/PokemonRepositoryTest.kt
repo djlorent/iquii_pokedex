@@ -99,8 +99,35 @@ class PokemonRepositoryTest {
     }
 
     @Test
-    fun gettingPokemonInfo() = runTest {
+    fun gettingPokemonInfo_FromLocal() = runTest {
+        Mockito
+            .`when`(localSrc.getPokemonDetails(1))
+            .thenReturn(MockUtils.domainPokemonWithDetails())
 
+        val item = repository.getPokemonInfo(1)
+        assert(item?.id == 1)
+        assert(item?.name == "bulbasaur")
+    }
+
+    @Test
+    fun gettingPokemonInfo_FromNetwork() = runTest {
+        Mockito
+            .`when`(localSrc.getPokemonDetails(1))
+            .thenReturn(MockUtils.domainPokemon())
+
+        Mockito
+            .`when`(localSrc.insertPokemonDetails(MockUtils.domainPokemonWithDetails()))
+            .thenReturn(true)
+
+        Mockito
+            .`when`(networkSrc.fetchPokemon("1"))
+            .thenReturn(MockUtils.domainPokemonWithDetails())
+
+        val item = repository.getPokemonInfo(1)
+        assert(item?.id == 1)
+        assert(item?.name == "bulbasaur")
+        assert(item?.stats != null)
+        assert(item?.types != null)
     }
 
     @Test

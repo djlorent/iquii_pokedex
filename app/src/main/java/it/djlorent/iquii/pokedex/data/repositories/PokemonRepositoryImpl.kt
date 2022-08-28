@@ -34,16 +34,15 @@ class PokemonRepositoryImpl @Inject constructor(
 
     override fun getAllFavorites(): Flow<List<Pokemon>> = localSrc.getAllFavorites().flowOn(ioDispatcher)
 
-    override suspend fun getPokemonInfo(id: Int): Pokemon? = withContext(ioDispatcher) {
-        var pokemonInfo = localSrc.getPokemonDetails(id)
+    override suspend fun getPokemonInfo(id: Int): Pokemon = withContext(ioDispatcher) {
+        var pokemon = localSrc.getPokemonDetails(id)
 
-        if(pokemonInfo == null){
-            pokemonInfo = networkSrc.fetchPokemon(id.toString())
-
-            pokemonInfo?.let{ localSrc.updatePokemonDetails(it) }
+        if(pokemon.stats == null || pokemon.types == null){
+            pokemon = networkSrc.fetchPokemon(id.toString()) ?: pokemon
+            pokemon.let{ localSrc.insertPokemonDetails(it) }
         }
 
-        return@withContext pokemonInfo
+        return@withContext pokemon
     }
 
     override suspend fun addFavoritePokemon(id: Int): Boolean = withContext(ioDispatcher) {
