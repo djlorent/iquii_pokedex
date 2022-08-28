@@ -3,6 +3,7 @@ package it.djlorent.iquii.pokedex.ui.pokedex
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import it.djlorent.iquii.pokedex.Constants
 import it.djlorent.iquii.pokedex.data.repositories.PokemonRepository
 import it.djlorent.iquii.pokedex.models.Pokemon
 import it.djlorent.iquii.pokedex.ui.models.FavoriteManagerResult
@@ -44,9 +45,9 @@ class PokedexViewModel @Inject constructor(
 
     private fun getPagingPokedex(page: Int): Flow<List<Pokemon>> = flow {
         val pokedexPage = if(page < currentPage){
-            repository.getPokedex(page, 20 * currentPage)
+            repository.getPokedex(page, Constants.PAGE_SIZE * currentPage)
         } else {
-            repository.getPokedex(page, 20)
+            repository.getPokedex(page, Constants.PAGE_SIZE)
         }
 
         if(pokedexPage.isNotEmpty())

@@ -11,13 +11,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.NavDirections
 import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import it.djlorent.iquii.pokedex.R
 import it.djlorent.iquii.pokedex.databinding.FragmentPokedexBinding
-import it.djlorent.iquii.pokedex.ui.adapters.Pagination
+import it.djlorent.iquii.pokedex.delegates.Pagination
 import it.djlorent.iquii.pokedex.ui.adapters.PokemonLinearAdapter
 import it.djlorent.iquii.pokedex.ui.models.FavoriteManagerResult
 import it.djlorent.iquii.pokedex.ui.models.PokemonState

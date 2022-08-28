@@ -1,8 +1,9 @@
-package it.djlorent.iquii.pokedex.ui.adapters
+package it.djlorent.iquii.pokedex.delegates
 
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import it.djlorent.iquii.pokedex.Constants
 
 class Pagination(
     private val isLoading: () -> Boolean,
@@ -10,7 +11,7 @@ class Pagination(
     private val onFinish: () -> Boolean
 ) : RecyclerView.OnScrollListener() {
 
-    private val threshold = 20
+    private val threshold = Constants.PAGINATION_THRESHOLD
 
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
