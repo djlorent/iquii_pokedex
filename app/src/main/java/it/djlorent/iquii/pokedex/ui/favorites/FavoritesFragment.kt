@@ -51,7 +51,7 @@ class FavoritesFragment : Fragment() {
                 (model as Pokemon).let {
                     selectedPokemonId = it.id
                     navigateToWithSharedView(
-                        FavoritesFragmentDirections.actionNavigationFavoritesToPokemonDetailsFragment(it.id),
+                        FavoritesFragmentDirections.actionNavigationFavoritesToPokemonDetailsFragment(it.id, it.name),
                         view
                     )
                 }

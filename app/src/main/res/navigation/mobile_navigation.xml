@@ -42,6 +42,9 @@
         <argument
             android:name="pokemonId"
             app:argType="integer" />
+        <argument
+            android:name="pokemonName"
+            app:argType="string" />
     </fragment>
 
 </navigation>

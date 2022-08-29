@@ -54,7 +54,7 @@ class PokedexFragment : Fragment() {
                 (model as PokemonState).let {
                     selectedPokemonId = it.pokemon.id
                     navigateToWithSharedView(
-                        PokedexFragmentDirections.actionNavigationPokedexToPokemonDetailsFragment(it.pokemon.id),
+                        PokedexFragmentDirections.actionNavigationPokedexToPokemonDetailsFragment(it.pokemon.id, it.pokemon.name),
                         view
                     )
                 }

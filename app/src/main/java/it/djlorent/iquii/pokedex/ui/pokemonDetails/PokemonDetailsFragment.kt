@@ -52,9 +52,11 @@ class PokemonDetailsFragment : Fragment() {
 
         pokemonDetailsViewModel.pokemonDetails.observe(viewLifecycleOwner) {
             it?.let{
+                if(it.image != binding.pokemonModel?.image)
+                    loadImage(it.image)
+
                 binding.pokemonModel = it
-                loadTypes(it.types!!)
-                loadImage(it.image)
+                it.types?.let { types -> loadTypes(types) }
             }
         }
 
