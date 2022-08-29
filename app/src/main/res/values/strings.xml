@@ -15,4 +15,5 @@
     <string name="special_defense">Sp. Defense</string>
     <string name="speed">Speed</string>
     <string name="no_favorites">There\'s no favorites...</string>
+    <string name="no_pokemon_found">No pokemon found here...</string>
 </resources>

@@ -104,8 +104,8 @@ class FavoritesFragment : Fragment() {
 
         subscribeOnStarted {
             favoritesViewModel.favoritesFlow.collect {
-                pokemonAdapter.submitList(it)
                 binding.noFavoritesText.isVisible = it.isEmpty()
+                pokemonAdapter.submitList(it)
             }
         }
     }

@@ -114,6 +114,7 @@ class PokedexFragment : Fragment() {
             pokedexViewModel.pokedexUiStateFlow.collect {
                 binding.loadingSpinner.isVisible = it.isLoading && pokemonAdapter.itemCount == 0
                 binding.loadingSpinnerAppend.isVisible = it.isLoading && pokemonAdapter.itemCount > 0
+                binding.noPokedexText.isVisible = !it.isLoading && pokemonAdapter.itemCount == 0
             }
         }
 
@@ -126,6 +127,7 @@ class PokedexFragment : Fragment() {
         }
 
         pokedexViewModel.pokeStateLive.observe(viewLifecycleOwner) {
+            binding.noPokedexText.isVisible = it.isEmpty()
             pokemonAdapter.submitList(it)
         }
     }

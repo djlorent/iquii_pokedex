@@ -8,6 +8,14 @@
     android:orientation="vertical"
     tools:context=".ui.pokedex.PokedexFragment">
 
+    <TextView
+        android:id="@+id/noPokedexText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/no_pokemon_found"
+        android:textSize="20sp" />
+
     <ProgressBar
         android:id="@+id/loading_spinner"
         android:layout_width="wrap_content"
