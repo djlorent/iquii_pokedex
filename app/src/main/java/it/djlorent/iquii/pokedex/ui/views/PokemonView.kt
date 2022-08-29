@@ -17,11 +17,13 @@ import it.djlorent.iquii.pokedex.ui.models.PokemonState
 abstract class PokemonView<T: ViewDataBinding, M> : FrameLayout {
     lateinit var binding: T
     lateinit var imagePokemonView: ImageView
+    lateinit var pokeballView: ImageView
 
     var itemClickListener: ((View, M) -> Unit)? = null
     var itemLongClickListener: ((M) -> Unit)? = null
     var imageLoadCompleteListener: ((M) -> Unit)? = null
     var imageLoadFailListener: ((M) -> Unit)? = null
+    var pokeballClickListener: ((M) -> Unit)? = null
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)

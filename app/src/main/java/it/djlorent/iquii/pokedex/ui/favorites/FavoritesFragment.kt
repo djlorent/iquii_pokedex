@@ -47,35 +47,43 @@ class FavoritesFragment : Fragment() {
 
     private fun initRecyclerView(){
         pokemonAdapter = PokemonGridAdapter(
-            itemClickListener = { view, model ->
-                (model as Pokemon).let {
-                    selectedPokemonId = it.id
-                    navigateToWithSharedView(
-                        FavoritesFragmentDirections.actionNavigationFavoritesToPokemonDetailsFragment(it.id, it.name),
-                        view
-                    )
-                }
-            },
-            itemLongClickListener = { model ->
-                (model as Pokemon).let{
-                    lifecycleScope.launch {
-                        val result = favoritesViewModel.removeFromFavorite(it)
-
-                        val printText = when(result){
-                            FavoriteManagerResult.Removed -> {
-                                requireContext().resources.getString(R.string.removedToFavorite, it.name)
-                            }
-                            else -> requireContext().resources.getString(R.string.error)
-                        }
-
-                        Toast.makeText(requireContext(), printText, Toast.LENGTH_SHORT).show()
-                    }
-                }
-            },
+            itemClickListener = ::navigateTo,
+            itemLongClickListener = ::removeFavorite,
+            pokeballClickListener = ::removeFavorite,
             imageLoadCompleteListener = ::imageLoadListener,
             imageLoadFailListener = ::imageLoadListener,
         )
         binding.favoritesView.adapter = pokemonAdapter
+    }
+
+    private fun navigateTo(view: View, model: Any){
+        (model as Pokemon).let {
+            selectedPokemonId = it.id
+            navigateToWithSharedView(
+                FavoritesFragmentDirections.actionNavigationFavoritesToPokemonDetailsFragment(
+                    it.id,
+                    it.name
+                ),
+                view
+            )
+        }
+    }
+
+    private fun removeFavorite(model: Any) {
+        (model as Pokemon).let{
+            lifecycleScope.launch {
+                val result = favoritesViewModel.removeFromFavorite(it)
+
+                val printText = when(result){
+                    FavoriteManagerResult.Removed -> {
+                        requireContext().resources.getString(R.string.removedToFavorite, it.name)
+                    }
+                    else -> requireContext().resources.getString(R.string.error)
+                }
+
+                Toast.makeText(requireContext(), printText, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun imageLoadListener(model: Any){

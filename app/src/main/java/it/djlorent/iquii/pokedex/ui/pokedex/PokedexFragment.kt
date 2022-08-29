@@ -50,36 +50,9 @@ class PokedexFragment : Fragment() {
 
     private fun initRecyclerView(){
         pokemonAdapter = PokemonLinearAdapter(
-            itemClickListener = { view, model ->
-                (model as PokemonState).let {
-                    selectedPokemonId = it.pokemon.id
-                    navigateToWithSharedView(
-                        PokedexFragmentDirections.actionNavigationPokedexToPokemonDetailsFragment(it.pokemon.id, it.pokemon.name),
-                        view
-                    )
-                }
-            },
-            pokeballClickListener = { model ->
-                (model as PokemonState).let {
-                    lifecycleScope.launch {
-                        val result = pokedexViewModel.addOrRemoveToFavorite(it)
-
-                        val printText = when(result){
-                            FavoriteManagerResult.Added -> {
-                                it.updateFavorite(true)
-                                requireContext().resources.getString(R.string.addedToFavorite, it.pokemon.name)
-                            }
-                            FavoriteManagerResult.Removed -> {
-                                it.updateFavorite(false)
-                                requireContext().resources.getString(R.string.removedToFavorite, it.pokemon.name)
-                            }
-                            else -> requireContext().resources.getString(R.string.error)
-                        }
-
-                        Toast.makeText(requireContext(), printText, Toast.LENGTH_SHORT).show()
-                    }
-                }
-            },
+            itemClickListener =  ::navigateTo,
+            itemLongClickListener = ::manageFavorite,
+            pokeballClickListener = ::manageFavorite,
             imageLoadCompleteListener = ::imageLoadListener,
             imageLoadFailListener = ::imageLoadListener
         )
@@ -91,6 +64,41 @@ class PokedexFragment : Fragment() {
                 onFinish = { pokedexViewModel.pokedexUiStateFlow.value.isComplete }
             )
         )
+    }
+
+    private fun navigateTo(view: View, model: Any) {
+        (model as PokemonState).let {
+            selectedPokemonId = it.pokemon.id
+            navigateToWithSharedView(
+                PokedexFragmentDirections.actionNavigationPokedexToPokemonDetailsFragment(
+                    it.pokemon.id,
+                    it.pokemon.name
+                ),
+                view
+            )
+        }
+    }
+
+    private fun manageFavorite(model: Any){
+        (model as PokemonState).let {
+            lifecycleScope.launch {
+                val result = pokedexViewModel.addOrRemoveToFavorite(it)
+
+                val printText = when(result){
+                    FavoriteManagerResult.Added -> {
+                        it.updateFavorite(true)
+                        requireContext().resources.getString(R.string.addedToFavorite, it.pokemon.name)
+                    }
+                    FavoriteManagerResult.Removed -> {
+                        it.updateFavorite(false)
+                        requireContext().resources.getString(R.string.removedToFavorite, it.pokemon.name)
+                    }
+                    else -> requireContext().resources.getString(R.string.error)
+                }
+
+                Toast.makeText(requireContext(), printText, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun imageLoadListener(model: Any) {

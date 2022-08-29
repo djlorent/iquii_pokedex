@@ -21,10 +21,15 @@ class PokemonGridView : PokemonView<ViewGridPokemonBinding, Pokemon> {
     init {
         binding = ViewGridPokemonBinding.inflate(LayoutInflater.from(context), this, true)
         imagePokemonView = binding.pokemonImageView
+        pokeballView = binding.favoriteBallView
 
         with(binding.root) {
             onClick { itemClickListener?.invoke(binding.pokemonImageView, binding.pokemonModel!!) }
             onLongClick { itemLongClickListener?.invoke(binding.pokemonModel!!) }
+        }
+
+        with(pokeballView){
+            onClick { pokeballClickListener?.invoke(binding.pokemonModel!!) }
         }
     }
 

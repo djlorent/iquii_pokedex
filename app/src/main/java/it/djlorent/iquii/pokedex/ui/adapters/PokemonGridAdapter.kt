@@ -12,6 +12,7 @@ import it.djlorent.iquii.pokedex.ui.views.PokemonGridView
 class PokemonGridAdapter(
     private val itemClickListener: ((View, Any) -> Unit)? = null,
     private val itemLongClickListener: ((Any) -> Unit)? = null,
+    private val pokeballClickListener: ((Any) -> Unit)? = null,
     private val imageLoadCompleteListener: ((Any) -> Unit)? = null,
     private val imageLoadFailListener: ((Any) -> Unit)? = null,
 ): ListAdapter<Pokemon, PokemonGridAdapter.ViewHolder>(DiffCallback) {
@@ -25,6 +26,7 @@ class PokemonGridAdapter(
             PokemonGridView(parent.context).apply {
                 itemClickListener = this@PokemonGridAdapter.itemClickListener
                 itemLongClickListener = this@PokemonGridAdapter.itemLongClickListener
+                pokeballClickListener = this@PokemonGridAdapter.pokeballClickListener
                 imageLoadCompleteListener = this@PokemonGridAdapter.imageLoadCompleteListener
                 imageLoadFailListener = this@PokemonGridAdapter.imageLoadFailListener
             }

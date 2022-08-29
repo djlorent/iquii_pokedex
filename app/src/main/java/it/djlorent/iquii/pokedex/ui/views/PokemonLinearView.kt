@@ -12,8 +12,6 @@ import it.djlorent.iquii.pokedex.extensions.onLongClick
 import it.djlorent.iquii.pokedex.ui.models.PokemonState
 
 open class PokemonLinearView : PokemonView<ViewLinearPokemonBinding, PokemonState> {
-    var pokeballClickListener: ((PokemonState) -> Unit)? = null
-    private val pokeballView: ImageView
 
     init {
         binding = ViewLinearPokemonBinding.inflate(LayoutInflater.from(context),this,true)
@@ -22,6 +20,7 @@ open class PokemonLinearView : PokemonView<ViewLinearPokemonBinding, PokemonStat
 
         with(binding.root) {
             onClick { itemClickListener?.invoke(binding.pokemonImageView, binding.pokemonModel!!) }
+            onLongClick { itemLongClickListener?.invoke(binding.pokemonModel!!) }
         }
 
         with(pokeballView){
